@@ -86,12 +86,14 @@ namespace Yarn.Unity
         /// serialise the type correctly.
         [System.Serializable]
         public class StringUnityEvent : UnityEngine.Events.UnityEvent<string> { }
+        [System.Serializable]
+        public class StringTagsUnityEvent : UnityEngine.Events.UnityEvent<string,string[]> { }
 
         /// A Unity event that receives the name of the node that just
         /// finished running
 #pragma warning disable 0649
         [SerializeField] StringUnityEvent onNodeComplete;
-        [SerializeField] UnityEvent<string,string[]> onNodeStart;
+        [SerializeField] StringTagsUnityEvent onNodeStart;
 #pragma warning restore 0649
 
         // A flag used to note when we call into a blocking command
