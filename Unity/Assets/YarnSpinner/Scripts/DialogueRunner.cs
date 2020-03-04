@@ -28,7 +28,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using CsvHelper;
+using System.Linq;
 using System;
+using UnityEngine.Events;
 
 // Field ... is never assigned to and will always have its default value null
 #pragma warning disable 0649
@@ -89,6 +91,7 @@ namespace Yarn.Unity
         /// finished running
 #pragma warning disable 0649
         [SerializeField] StringUnityEvent onNodeComplete;
+        [SerializeField] UnityEvent<string,string[]> onNodeStart;
 #pragma warning restore 0649
 
         // A flag used to note when we call into a blocking command
@@ -123,6 +126,11 @@ namespace Yarn.Unity
                     _dialogue.lineHandler = HandleLine;
                     _dialogue.commandHandler = HandleCommand;
                     _dialogue.optionsHandler = HandleOptions;
+                    _dialogue.nodeStartHandler = (node) => {
+                        onNodeStart?.Invoke(node, _dialogue.GetTagsForNode(node).ToArray());
+                        
+                        return Dialogue.HandlerExecutionType.ContinueExecution;
+                    };
                     _dialogue.nodeCompleteHandler = (node) => { 
                         onNodeComplete?.Invoke(node); 
                         return Dialogue.HandlerExecutionType.ContinueExecution; 
