@@ -28,9 +28,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using CsvHelper;
-using System.Linq;
 using System;
-using UnityEngine.Events;
 
 // Field ... is never assigned to and will always have its default value null
 #pragma warning disable 0649
@@ -87,7 +85,7 @@ namespace Yarn.Unity
         [System.Serializable]
         public class StringUnityEvent : UnityEngine.Events.UnityEvent<string> { }
         [System.Serializable]
-        public class StringTagsUnityEvent : UnityEngine.Events.UnityEvent<string,string[]> { }
+        public class StringTagsUnityEvent : UnityEngine.Events.UnityEvent<string,IEnumerable<string>> { }
 
         /// A Unity event that receives the name of the node that just
         /// finished running
@@ -129,8 +127,8 @@ namespace Yarn.Unity
                     _dialogue.commandHandler = HandleCommand;
                     _dialogue.optionsHandler = HandleOptions;
                     _dialogue.nodeStartHandler = (node) => {
-                        onNodeStart?.Invoke(node, _dialogue.GetTagsForNode(node).ToArray());
-                        
+                        onNodeStart?.Invoke(node, _dialogue.GetTagsForNode(node));
+
                         return Dialogue.HandlerExecutionType.ContinueExecution;
                     };
                     _dialogue.nodeCompleteHandler = (node) => { 
